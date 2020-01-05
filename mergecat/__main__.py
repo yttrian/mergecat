@@ -3,9 +3,9 @@ import click
 
 @click.command()
 @click.option("--input",
-              prompt="Video file to process:",
+              prompt="Video file to process",
               help="Location of video file to process")
-def mergecat():
+def mergecat(video_file):
     click.echo("Hello world!")
 
 

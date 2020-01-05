@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mergecat",
-    version="0.0.2",
+    version="0.0.4",
     author="Ian Moore",
     author_email="mergecat@yttr.org",
     description="Automatic voice line clip extractor",
@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": [
-            "mergecat = mergecat:mergecat"
+            "mergecat = mergecat.__main__:mergecat"
         ]
     },
     classifiers=[
