@@ -14,18 +14,18 @@ import click
 @click.option("--out",
               default="out.mkv",
               help="Output file, default is out.mkv in current directory",
-              type=click.Path(exists=True, writable=True))
+              type=click.Path(writable=True))
 def mergecat(video_file, timing_file, *, out):
     concat = open("concat.txt", "w")
 
     for count, timestamp in enumerate(timing_file):
-        start, end = [int(i) for i in timestamp.split(" ")]
-        duration = end - start
+        start, end = timestamp.split(" ")
+        duration = str(int(end) - int(start))
 
         click.echo(f"Creating clip {count}")
         call(["ffmpeg", "-y", "-loglevel", "panic",
               "-i", video_file,
-              "-ss", "start", "-t", duration,
+              "-ss", start, "-t", duration,
               "-c", "copy", f"in{count}.mkv"])
         concat.write(f'file \'in{count}.mkv\'\n')
 
