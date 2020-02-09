@@ -16,25 +16,23 @@ import click
               help="Output file, default is out.mkv in current directory",
               type=click.Path(writable=True))
 def mergecat(video_file, timing_file, *, out):
-    concat = open("concat.txt", "w")
+    with open("concat.txt", "w") as concat:
+        for count, timestamp in enumerate(timing_file):
+            start, end = timestamp.split(" ")
+            duration = str(int(end) - int(start))
 
-    for count, timestamp in enumerate(timing_file):
-        start, end = timestamp.split(" ")
-        duration = str(int(end) - int(start))
+            click.echo(f"Creating clip {count}")
+            call(["ffmpeg", "-y", "-loglevel", "panic",
+                  "-i", video_file,
+                  "-ss", start, "-t", duration,
+                  "-c", "copy", f"in{count}.mkv"])
+            concat.write(f"file 'in{count}.mkv'\n")
 
-        click.echo(f"Creating clip {count}")
-        call(["ffmpeg", "-y", "-loglevel", "panic",
-              "-i", video_file,
-              "-ss", start, "-t", duration,
-              "-c", "copy", f"in{count}.mkv"])
-        concat.write(f'file \'in{count}.mkv\'\n')
-
-    concat.close()
-    click.echo(f'Creating final output')
+    click.echo(f"Creating final output")
     call(["ffmpeg", "-y", "-loglevel", "panic",
           "-f", "concat", "-i", "concat.txt",
           "-c", "copy", out])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     mergecat()
