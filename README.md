@@ -1,6 +1,6 @@
 # mergecat
 
-Automatic voice line clip extractor
+Semi-automatic voice line clip extractor
 
 ## How to use
 
