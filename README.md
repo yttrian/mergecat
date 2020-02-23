@@ -18,6 +18,8 @@ Semi-automatic voice line clip extractor
    
 ## Goals
 
-- Automate the process instead of requiring timing files
-- Allow batch processing
-- Handle temporary file cleanup better
+- [x] Handle temporary file cleanup
+- [ ] Automate the process instead of requiring timing files
+- [ ] Be more flexible than just using seconds
+- [ ] Add input error checking
+- [ ] Allow batch processing
