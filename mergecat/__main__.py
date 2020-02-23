@@ -19,13 +19,15 @@ import tempfile
               type=click.Path(writable=True))
 def mergecat(video_file: str, timing_file, *, out):
     tmp_dir = tempfile.gettempdir()
-    name = path.splitext(path.basename(video_file))[0].replace(" ", "_")
+    name = path.splitext(path.basename(video_file))[0]
     tmp_files = []
 
+    # create the concat file
     concat_file = path.join(tmp_dir, f"{name}-concat.txt")
     tmp_files.append(concat_file)
 
     with open(concat_file, "w") as concat:
+        # cut each clip based on given times
         for count, timestamp in enumerate(timing_file):
             start, end = timestamp.split(" ")
             duration = str(int(end) - int(start))
@@ -36,19 +38,23 @@ def mergecat(video_file: str, timing_file, *, out):
             click.echo(f"Creating clip {count}")
             call(["ffmpeg", "-y", "-loglevel", "panic",
                   "-i", video_file,
-                  "-ss", start, "-t", duration,
+                  "-ss", start,
+                  "-t", duration,
                   "-c", "copy", clip_file])
-            concat.write(f"file '{path.basename(clip_file)}'\n")
+            concat.write(f"file '{clip_file}'\n")
 
     if out is None:
         out = f"{name}-mergecat.mkv"
 
+    # save the concatenated clips
     click.echo(f"Creating final output")
-    call(["ffmpeg", "-y", "-loglevel", "panic",
+    call(["ffmpeg", "-y", "-loglevel", "error",
           "-f", "concat",
+          "-safe", "0",  # since we are forced to use exact paths
           "-i", concat_file,
           "-c", "copy", out])
 
+    # clean up any temp files
     for tmp_file in tmp_files:
         remove(tmp_file)
 
