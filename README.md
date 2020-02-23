@@ -4,7 +4,7 @@ Semi-automatic voice line clip extractor
 
 ## How to use
 
-1. Install the package via `pip install mergecat`
+1. Install the package via `pip install mergecat` and make sure you have `ffmpeg`
 2. Create a timing file in a format like this (using seconds)  
    Example:
    ```
